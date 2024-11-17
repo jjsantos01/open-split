@@ -68,27 +68,71 @@ async def read_google_sheet(url: str) -> list[dict]:
     except Exception as e:
         raise Exception(f"Error inesperado: {str(e)}")
 
-def balance_transactions(gastos, participantes, print_summary=True):
+def parse_participants(participants_str, total_amount, all_participants):
+    """
+    Parsea la cadena de participantes y sus montos.
+    Retorna un diccionario con los montos asignados a cada participante.
+    """
+    if not participants_str:
+        # Si no hay participantes especificados, dividir entre todos equitativamente
+        amount_per_person = total_amount / len(all_participants)
+        return {p: amount_per_person for p in all_participants}
+
+    # Inicializar el diccionario de participantes y montos
+    participant_amounts = {}
+    participants_without_amount = []
+    remaining_amount = total_amount
+
+    # Procesar cada participante
+    for part in participants_str.split(','):
+        part = part.strip()
+        if '=' in part:
+            # Participante con monto específico
+            name, amount = part.split('=')
+            name = name.strip()
+            amount = float(amount.strip())
+            if name not in all_participants:
+                raise ValueError(f"Participante inválido: {name}")
+            participant_amounts[name] = amount
+            remaining_amount -= amount
+        else:
+            # Participante sin monto específico
+            if part not in all_participants:
+                raise ValueError(f"Participante inválido: {part}")
+            participants_without_amount.append(part)
+
+    # Verificar que el monto total no exceda el gasto
+    if remaining_amount < 0:
+        raise ValueError("La suma de los montos especificados excede el total del gasto")
+
+    # Distribuir el monto restante entre los participantes sin monto específico
+    if participants_without_amount:
+        amount_per_remaining = remaining_amount / len(participants_without_amount)
+        for participant in participants_without_amount:
+            participant_amounts[participant] = amount_per_remaining
+
+    return participant_amounts
+
+def balance_transactions(gastos, participantes, display_summary=True):
     # Inicializar el total de gastos por persona
     gastos_por_persona = {persona: 0 for persona in participantes}
 
     # Para cada gasto, calcular cuánto debe pagar cada participante
     for gasto in gastos:
-        # Determinar quiénes participan en este gasto
-        participantes_gasto = participantes  # por defecto, todos participan
-        if 'participants' in gasto and gasto['participants']:
-            # Si hay participantes específicos, convertir string a lista
-            participantes_gasto = [p.strip() for p in gasto['participants'].split(',')]
-            # Verificar que todos los participantes sean válidos
-            if not all(p in participantes for p in participantes_gasto):
-                raise ValueError(f"Participantes inválidos en gasto {gasto['item']}")
+        try:
+            # Determinar los montos por participante
+            participantes_montos = parse_participants(
+                gasto.get('participants', ''),
+                gasto['amount'],
+                participantes
+            )
 
-        # Calcular el gasto por persona para esta transacción
-        gasto_por_persona = gasto['amount'] / len(participantes_gasto)
+            # Asignar los gastos a cada participante
+            for persona, monto in participantes_montos.items():
+                gastos_por_persona[persona] += monto
 
-        # Asignar el gasto a cada participante
-        for persona in participantes_gasto:
-            gastos_por_persona[persona] += gasto_por_persona
+        except Exception as e:
+            raise ValueError(f"Error en gasto '{gasto['item']}': {str(e)}")
 
     # Calcular cuánto ha pagado cada participante en total
     pagos_realizados = {persona: 0 for persona in participantes}
@@ -122,11 +166,17 @@ def balance_transactions(gastos, participantes, print_summary=True):
         if acreedores[j][1] < 0.01:
             j += 1
 
-    if print_summary:
+    if display_summary:
         display("\nGastos realizados:")
         for gasto in gastos:
-            participantes_str = " (para: " + gasto['participants'] + ")" if 'participants' in gasto and gasto['participants'] else " (para: Todos)"
-            display(f"- {gasto['name']} gastó ${gasto['amount']:,.2f} en {gasto['item']}{participantes_str}")
+            participantes_montos = parse_participants(
+                gasto.get('participants', ''),
+                gasto['amount'],
+                participantes
+            )
+            desglose = ", ".join([f"{p}: ${m:.2f}" for p, m in participantes_montos.items()])
+            display(f"- {gasto['name']} gastó ${gasto['amount']:,.2f} en {gasto['item']}")
+            display(f"  -- Desglose: {desglose}")
 
         display("\nGasto total por persona (lo que debe pagar cada uno):")
         for persona, gasto in gastos_por_persona.items():
