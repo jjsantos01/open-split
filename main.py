@@ -69,18 +69,35 @@ async def read_google_sheet(url: str) -> list[dict]:
         raise Exception(f"Error inesperado: {str(e)}")
 
 def balance_transactions(gastos, participantes, print_summary=True):
-    # Calcular el gasto total
-    total_gastos = sum(gasto['amount'] for gasto in gastos)
-    # Calcular el gasto equitativo por persona
-    gasto_ideal = total_gastos / len(participantes)
+    # Inicializar el total de gastos por persona
+    gastos_por_persona = {persona: 0 for persona in participantes}
 
-    # Calcular cuánto ha pagado cada participante
+    # Para cada gasto, calcular cuánto debe pagar cada participante
+    for gasto in gastos:
+        # Determinar quiénes participan en este gasto
+        participantes_gasto = participantes  # por defecto, todos participan
+        if 'participants' in gasto and gasto['participants']:
+            # Si hay participantes específicos, convertir string a lista
+            participantes_gasto = [p.strip() for p in gasto['participants'].split(',')]
+            # Verificar que todos los participantes sean válidos
+            if not all(p in participantes for p in participantes_gasto):
+                raise ValueError(f"Participantes inválidos en gasto {gasto['item']}")
+
+        # Calcular el gasto por persona para esta transacción
+        gasto_por_persona = gasto['amount'] / len(participantes_gasto)
+
+        # Asignar el gasto a cada participante
+        for persona in participantes_gasto:
+            gastos_por_persona[persona] += gasto_por_persona
+
+    # Calcular cuánto ha pagado cada participante en total
     pagos_realizados = {persona: 0 for persona in participantes}
     for gasto in gastos:
         pagos_realizados[gasto['name']] += gasto['amount']
 
     # Calcular el balance de cada participante
-    balances = {persona: pagos_realizados[persona] - gasto_ideal for persona in participantes}
+    balances = {persona: pagos_realizados[persona] - gastos_por_persona[persona]
+                for persona in participantes}
 
     # Separar participantes en acreedores y deudores
     acreedores = [(persona, balance) for persona, balance in balances.items() if balance > 0]
@@ -94,29 +111,38 @@ def balance_transactions(gastos, participantes, print_summary=True):
         acreedor, credito = acreedores[j]
 
         pago = min(deuda, credito)
-        transacciones.append(f"{deudor} debe pagarle a {acreedor} ${pago:.2f}")
+        if pago >= 0.01:  # Solo agregar transacciones significativas
+            transacciones.append(f"{deudor} debe pagarle a {acreedor} ${pago:.2f}")
 
         deudores[i] = (deudor, deuda - pago)
         acreedores[j] = (acreedor, credito - pago)
 
-        if deudores[i][1] == 0:
+        if deudores[i][1] < 0.01:
             i += 1
-        if acreedores[j][1] == 0:
+        if acreedores[j][1] < 0.01:
             j += 1
 
     if print_summary:
-        display("Gastos realizados:", target="result", append=True)
-        for line in gastos:
-            display(f'- {line["name"]} gastó {line["amount"]:,} en {line["item"]}', target="result", append=True)
+        display("\nGastos realizados:")
+        for gasto in gastos:
+            participantes_str = " (para: " + gasto['participants'] + ")" if 'participants' in gasto and gasto['participants'] else " (para: Todos)"
+            display(f"- {gasto['name']} gastó ${gasto['amount']:,.2f} en {gasto['item']}{participantes_str}")
 
-        display("Gastos por persona:")
-        for persona, gasto in pagos_realizados.items():
-            display(f"- \t{persona}: ${gasto:,.2f}")
-        display(f"Total de gastos: ${total_gastos:,.2f}")
-        display(f"Gasto equitativo por persona: ${gasto_ideal:,.2f}")
-        display("Pagos pendientes:")
-        for r in transacciones:
-            display(f"- {r}")
+        display("\nGasto total por persona (lo que debe pagar cada uno):")
+        for persona, gasto in gastos_por_persona.items():
+            display(f"- {persona}: ${gasto:,.2f}")
+
+        display("\nPagos realizados por persona:")
+        for persona, pago in pagos_realizados.items():
+            display(f"- {persona}: ${pago:,.2f}")
+
+        display("\nBalance final por persona:")
+        for persona, balance in balances.items():
+            display(f"- {persona}: ${balance:,.2f}")
+
+        display("\nPagos pendientes:")
+        for transaccion in transacciones:
+            display(f"- {transaccion}")
 
     return transacciones
 
