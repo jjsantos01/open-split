@@ -1,12 +1,11 @@
 from pyscript import fetch, display
 from pyscript.web import page
+import js
 import csv
 from urllib.parse import urlparse
 from io import StringIO
 
-print("Analiza gastos")
-
-async def leer_google_sheets(url):
+async def read_google_sheet(url: str) -> list[dict]:
     """
     Lee una hoja de cálculo pública de Google Sheets y la convierte en una lista de diccionarios.
 
@@ -36,10 +35,7 @@ async def leer_google_sheets(url):
         # Construir la URL de exportación CSV
         csv_url = f"https://docs.google.com/spreadsheets/d/{doc_id}/export?format=csv"
         # Realizar la solicitud HTTP
-        response = await fetch(
-            f"https://docs.google.com/spreadsheets/d/{doc_id}/export?format=csv",
-            method="GET"
-        ).text()
+        response = await fetch(csv_url, method="GET").text()
         # Usar CSV reader con StringIO para procesar el contenido
         csv_file = StringIO(response)
         csv_reader = csv.reader(csv_file)
@@ -72,7 +68,7 @@ async def leer_google_sheets(url):
     except Exception as e:
         raise Exception(f"Error inesperado: {str(e)}")
 
-def calcular_deudas(gastos, participantes, print_summary=True):
+def balance_transactions(gastos, participantes, print_summary=True):
     # Calcular el gasto total
     total_gastos = sum(gasto['amount'] for gasto in gastos)
     # Calcular el gasto equitativo por persona
@@ -120,12 +116,12 @@ def calcular_deudas(gastos, participantes, print_summary=True):
         display(f"Gasto equitativo por persona: ${gasto_ideal:,.2f}")
         display("Pagos pendientes:")
         for r in transacciones:
-            display(r)
+            display(f"- {r}")
 
     return transacciones
 
 async def calculate_from_url(url):
-    url = page["#new-task-content"][0].value
-    gastos = await leer_google_sheets(url)
+    url = page["#sheet-url"][0].value
+    gastos = await read_google_sheet(url)
     participantes = list(set(gasto["name"] for gasto in gastos))
-    calcular_deudas(gastos, participantes)
+    balance_transactions(gastos, participantes)

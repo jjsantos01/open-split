@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Wispy Block</title>
+    <title>Open-split</title>
 
     <!-- Recommended meta tags -->
     <meta charset="UTF-8">
@@ -15,8 +15,8 @@
 </head>
 <body>
   <div>
-    <input id="new-task-content" type="text" placeholder="https://docs.google.com/spreadsheets/d/{ID}/edit?usp=sharing"/>
-    <button id="new-task-btn" type="submit" py-click="calculate_from_url">
+    <input id="sheet-url" type="text" value="https://docs.google.com/spreadsheets/d/1dsHb32ksG2k_YNeneAodtBOU_xsmXlcK8ClqK9L0fRk/edit?usp=sharing" placeholder="https://docs.google.com/spreadsheets/d/{ID}/edit?usp=sharing"/>
+    <button id="sheet-url-btn" type="submit" py-click="calculate_from_url">
         Calcular
     </button>
     <div id="result"></div>
