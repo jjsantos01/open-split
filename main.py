@@ -167,7 +167,7 @@ def balance_transactions(gastos, participantes, display_summary=True):
             j += 1
 
     if display_summary:
-        display("\nGastos realizados:", target="results", append=False)
+        display("\nGastos realizados:", target="results")
         for gasto in gastos:
             participantes_montos = parse_participants(
                 gasto.get('participants', ''),
@@ -199,7 +199,7 @@ def balance_transactions(gastos, participantes, display_summary=True):
 async def calculate_from_url(url):
     url = page["#sheet-url"][0].value
     results_div = page["#results"][0]
-    results_div.innerHTML = "Calculando..."
+    results_div.innerHTML = "<h2>Resultados</h2>"
     gastos = await read_google_sheet(url)
     participantes = list(set(gasto["name"] for gasto in gastos))
     balance_transactions(gastos, participantes)

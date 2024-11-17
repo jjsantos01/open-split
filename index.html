@@ -13,9 +13,32 @@
 <body>
     <h1>Open Split - Divisor de Gastos</h1>
 
-    <p>Esta aplicación te ayuda a dividir gastos entre un grupo de personas de manera flexible y equitativa. Puedes especificar diferentes formas de dividir cada gasto, desde división equitativa hasta montos específicos por persona.</p>
+    <p>
+      Esta aplicación te ayuda a dividir gastos entre un grupo de personas de manera flexible y equitativa.
+      Puedes especificar diferentes formas de dividir cada gasto, desde división equitativa hasta montos específicos por persona.
+    </p>
+
+    <p>
+      Para comenzar, introduce tus gastos en una hoja de cálculo de Google y copia la URL a continuación.
+
+    </p>
+    <div class="tip">
+      Para llenar la hoja de cálculo, sigue las <a href="#instrucciones">instrucciones de más abajo</a>.
+    </div>
+
+    <div class="warning">
+      La hoja de calculo debe ser visible públicamente para que la aplicación pueda acceder a ella.
+    </div>
+
+
+    <div class="tip">
+      Si no tienes una hoja de cálculo, puedes usar este ejemplo para comenzar:
+      https://docs.google.com/spreadsheets/d/1dsHb32ksG2k_YNeneAodtBOU_xsmXlcK8ClqK9L0fRk/edit?usp=sharing
+    </div>
+
 
     <div id="main-content">
+      <label for="sheet-url">URL de la Hoja de Cálculo:</label>
       <input id="sheet-url" type="text" value="https://docs.google.com/spreadsheets/d/1dsHb32ksG2k_YNeneAodtBOU_xsmXlcK8ClqK9L0fRk/edit?usp=sharing" placeholder="https://docs.google.com/spreadsheets/d/{ID}/edit?usp=sharing"/>
       <button id="sheet-url-btn" type="submit" py-click="calculate_from_url">
           Calcular
@@ -25,7 +48,7 @@
 
     <script type="py" src="./main.py" config="./pyscript.toml"></script>
 
-    <h2>Estructura de la Hoja de Cálculo</h2>
+    <h2 id="instrucciones">Estructura de la Hoja de Cálculo</h2>
     <p>La hoja de cálculo debe tener las siguientes columnas:</p>
     <table>
         <tr>
