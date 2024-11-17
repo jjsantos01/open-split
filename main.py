@@ -1,6 +1,5 @@
 from pyscript import fetch, display
 from pyscript.web import page
-import js
 import csv
 from urllib.parse import urlparse
 from io import StringIO
@@ -28,12 +27,14 @@ async def read_google_sheet(url: str) -> list[dict]:
 
         # Extraer el ID del documento de la URL
         if '/d/' in url:
-            # URL formato: https://docs.google.com/spreadsheets/d/[ID]/edit
+            # URL formato: https://docs.google.com/spreadsheets/d/[ID]/edit?gid=0
             doc_id = url.split('/d/')[1].split('/')[0]
+            gid = url.split('gid=')[1] if 'gid=' in url else '0'
+
         else:
             raise ValueError("No se pudo extraer el ID del documento de la URL")
         # Construir la URL de exportación CSV
-        csv_url = f"https://docs.google.com/spreadsheets/d/{doc_id}/export?format=csv"
+        csv_url = f"https://docs.google.com/spreadsheets/d/{doc_id}/export?format=csv&gid={gid}"
         # Realizar la solicitud HTTP
         response = await fetch(csv_url, method="GET").text()
         # Usar CSV reader con StringIO para procesar el contenido
