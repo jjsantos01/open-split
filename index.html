@@ -1,27 +1,189 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-    <title>Open-split</title>
-
-    <!-- Recommended meta tags -->
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Open-split</title>
+    <link rel="stylesheet" href="styles.css">
     <!-- PyScript CSS -->
     <link rel="stylesheet" href="https://pyscript.net/releases/2024.10.1/core.css">
-
     <!-- This script tag bootstraps PyScript -->
     <script type="module" src="https://pyscript.net/releases/2024.10.1/core.js"></script>
 </head>
 <body>
-  <div>
-    <input id="sheet-url" type="text" value="https://docs.google.com/spreadsheets/d/1dsHb32ksG2k_YNeneAodtBOU_xsmXlcK8ClqK9L0fRk/edit?usp=sharing" placeholder="https://docs.google.com/spreadsheets/d/{ID}/edit?usp=sharing"/>
-    <button id="sheet-url-btn" type="submit" py-click="calculate_from_url">
-        Calcular
-    </button>
-    <div id="result"></div>
-  </div>
+    <h1>Open Split - Divisor de Gastos</h1>
 
-  <script type="py" src="./main.py" config="./pyscript.toml"></script>
+    <p>Esta aplicación te ayuda a dividir gastos entre un grupo de personas de manera flexible y equitativa. Puedes especificar diferentes formas de dividir cada gasto, desde división equitativa hasta montos específicos por persona.</p>
+
+    <div id="main-content">
+      <input id="sheet-url" type="text" value="https://docs.google.com/spreadsheets/d/1dsHb32ksG2k_YNeneAodtBOU_xsmXlcK8ClqK9L0fRk/edit?usp=sharing" placeholder="https://docs.google.com/spreadsheets/d/{ID}/edit?usp=sharing"/>
+      <button id="sheet-url-btn" type="submit" py-click="calculate_from_url">
+          Calcular
+      </button>
+      <div id="results"></div>
+    </div>
+
+    <script type="py" src="./main.py" config="./pyscript.toml"></script>
+
+    <h2>Estructura de la Hoja de Cálculo</h2>
+    <p>La hoja de cálculo debe tener las siguientes columnas:</p>
+    <table>
+        <tr>
+            <th>Columna</th>
+            <th>Descripción</th>
+            <th>Obligatorio</th>
+        </tr>
+        <tr>
+            <td>item</td>
+            <td>Descripción del gasto (ej: "Supermercado", "Gasolina")</td>
+            <td>Sí</td>
+        </tr>
+        <tr>
+            <td>name</td>
+            <td>Nombre de quien realizó el pago</td>
+            <td>Sí</td>
+        </tr>
+        <tr>
+            <td>amount</td>
+            <td>Monto total del gasto</td>
+            <td>Sí</td>
+        </tr>
+        <tr>
+            <td>participants</td>
+            <td>Quiénes participan en el gasto y cómo se divide</td>
+            <td>No</td>
+        </tr>
+    </table>
+
+    <h2>Formas de Dividir los Gastos</h2>
+
+    <h3>1. División Equitativa entre Todos</h3>
+    <div class="example">
+        <p>Deja la columna 'participants' vacía para dividir el gasto equitativamente entre todos los participantes.</p>
+        <table>
+            <tr>
+                <th>item</th>
+                <th>name</th>
+                <th>amount</th>
+                <th>participants</th>
+            </tr>
+            <tr>
+                <td>Snacks</td>
+                <td>María</td>
+                <td>430</td>
+                <td></td>
+            </tr>
+        </table>
+    </div>
+
+    <h3>2. División Equitativa entre Algunos</h3>
+    <div class="example">
+        <p>Lista los nombres de los participantes separados por comas:</p>
+        <table>
+            <tr>
+                <th>item</th>
+                <th>name</th>
+                <th>amount</th>
+                <th>participants</th>
+            </tr>
+            <tr>
+                <td>Gasolina</td>
+                <td>Luis</td>
+                <td>720</td>
+                <td>Luis,Ana,María</td>
+            </tr>
+        </table>
+    </div>
+
+    <h3>3. División con Montos Específicos</h3>
+    <div class="example">
+        <p>Usa el símbolo = para asignar montos específicos:</p>
+        <table>
+            <tr>
+                <th>item</th>
+                <th>name</th>
+                <th>amount</th>
+                <th>participants</th>
+            </tr>
+            <tr>
+                <td>Almuerzo</td>
+                <td>Ana</td>
+                <td>1500</td>
+                <td>Ana=500,Luis=500,María=500</td>
+            </tr>
+        </table>
+    </div>
+
+    <h3>4. División Mixta</h3>
+    <div class="example">
+        <p>Combina montos específicos con división equitativa del resto:</p>
+        <table>
+            <tr>
+                <th>item</th>
+                <th>name</th>
+                <th>amount</th>
+                <th>participants</th>
+            </tr>
+            <tr>
+                <td>Super</td>
+                <td>Ana</td>
+                <td>950</td>
+                <td>Ana=400,Luis=400,María</td>
+            </tr>
+        </table>
+        <p>En este ejemplo, María pagará los $150 restantes.</p>
+    </div>
+
+    <h2>Consejos y Advertencias</h2>
+
+    <div class="tip">
+        Para una división equitativa entre varios participantes, simplemente lista sus nombres separados por comas sin usar el símbolo =.
+    </div>
+
+    <div class="warning">
+        La suma de los montos específicos no puede exceder el monto total del gasto.
+    </div>
+
+    <div class="tip">
+        Si algunos participantes tienen montos específicos y otros no, el monto restante se dividirá equitativamente entre los participantes sin monto específico.
+    </div>
+
+    <div class="warning">
+        Todos los nombres en la columna 'participants' deben corresponder exactamente a los nombres de los participantes del grupo.
+    </div>
+
+    <h2>Ejemplos de Casos Comunes</h2>
+
+    <h3>Caso 1: Alguien paga más por una razón específica</h3>
+    <div class="example">
+        <p>Por ejemplo, si en una cena alguien pidió algo más costoso:</p>
+        <table>
+            <tr>
+                <td>Cena</td>
+                <td>Pedro</td>
+                <td>1200</td>
+                <td>Pedro=500,Ana,Luis,María</td>
+            </tr>
+        </table>
+        <p>Pedro pagará $500, y el resto ($700) se divide entre Ana, Luis y María.</p>
+    </div>
+
+    <h3>Caso 2: Gasto compartido entre parejas</h3>
+    <div class="example">
+        <p>Si el gasto se divide por parejas o grupos:</p>
+        <table>
+            <tr>
+                <td>Hospedaje</td>
+                <td>Ana</td>
+                <td>2000</td>
+                <td>Ana=1000,Luis=1000</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="tip">
+        Revisa siempre el resumen generado por la aplicación para verificar que los gastos se hayan dividido como esperas.
+    </div>
+
 </body>
 </html>

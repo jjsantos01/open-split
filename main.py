@@ -30,7 +30,6 @@ async def read_google_sheet(url: str) -> list[dict]:
             # URL formato: https://docs.google.com/spreadsheets/d/[ID]/edit?gid=0
             doc_id = url.split('/d/')[1].split('/')[0]
             gid = url.split('gid=')[1] if 'gid=' in url else '0'
-
         else:
             raise ValueError("No se pudo extraer el ID del documento de la URL")
         # Construir la URL de exportación CSV
@@ -168,7 +167,7 @@ def balance_transactions(gastos, participantes, display_summary=True):
             j += 1
 
     if display_summary:
-        display("\nGastos realizados:")
+        display("\nGastos realizados:", target="results", append=False)
         for gasto in gastos:
             participantes_montos = parse_participants(
                 gasto.get('participants', ''),
@@ -176,29 +175,31 @@ def balance_transactions(gastos, participantes, display_summary=True):
                 participantes
             )
             desglose = ", ".join([f"{p}: ${m:.2f}" for p, m in participantes_montos.items()])
-            display(f"- {gasto['name']} gastó ${gasto['amount']:,.2f} en {gasto['item']}")
-            display(f"  -- Desglose: {desglose}")
+            display(f"- {gasto['name']} gastó ${gasto['amount']:,.2f} en {gasto['item']}", target="results")
+            display(f"  -- Desglose: {desglose}", target="results")
 
-        display("\nGasto total por persona (lo que debe pagar cada uno):")
+        display("\nGasto total por persona (lo que debe pagar cada uno):", target="results")
         for persona, gasto in gastos_por_persona.items():
-            display(f"- {persona}: ${gasto:,.2f}")
+            display(f"- {persona}: ${gasto:,.2f}", target="results")
 
-        display("\nPagos realizados por persona:")
+        display("\nPagos realizados por persona:", target="results")
         for persona, pago in pagos_realizados.items():
-            display(f"- {persona}: ${pago:,.2f}")
+            display(f"- {persona}: ${pago:,.2f}", target="results")
 
-        display("\nBalance final por persona:")
+        display("\nBalance final por persona:", target="results")
         for persona, balance in balances.items():
-            display(f"- {persona}: ${balance:,.2f}")
+            display(f"- {persona}: ${balance:,.2f}", target="results")
 
-        display("\nPagos pendientes:")
+        display("\nPagos pendientes:", target="results")
         for transaccion in transacciones:
-            display(f"- {transaccion}")
+            display(f"- {transaccion}", target="results")
 
     return transacciones
 
 async def calculate_from_url(url):
     url = page["#sheet-url"][0].value
+    results_div = page["#results"][0]
+    results_div.innerHTML = "Calculando..."
     gastos = await read_google_sheet(url)
     participantes = list(set(gasto["name"] for gasto in gastos))
     balance_transactions(gastos, participantes)
