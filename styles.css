@@ -54,6 +54,11 @@ tr:hover {
   content: "💡 Tip: ";
   font-weight: bold;
 }
+.tip p {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-all;
+}
 .warning {
   background-color: #fff3cd;
   border-left: 4px solid #ffc107;
@@ -81,4 +86,7 @@ footer a {
 footer a:hover {
   color: #333;
 }
-
+img {
+  max-width: 100%;
+  height: auto;
+}
