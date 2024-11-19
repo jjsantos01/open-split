@@ -34,6 +34,16 @@ th, td {
 th {
   background-color: #f4f6f8;
 }
+tr:hover {
+  background-color: #f0f0f0;
+}
+.concept {
+  text-align: left;
+}
+.total-row {
+  font-weight: bold;
+  background-color: #e9e9e9;
+}
 .tip {
   background-color: #e8f4f8;
   border-radius: 4px;

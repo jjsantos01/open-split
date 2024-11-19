@@ -177,29 +177,100 @@ def balance_transactions(gastos):
     return output
 
 def display_summary(gastos, gastos_por_persona, pagos_realizados, balances, transacciones):
+    results_div = page["#results"][0]
+    innerHTML = "<h2>Resultados</h2>"
+
     participantes = list(gastos_por_persona.keys())
     display("\nGastos realizados:", target="results")
+        # Inicio de la tabla HTML con estilos
+    html = """
+    <table>
+        <thead>
+            <tr>
+                <th>Pagado por</th>
+                <th>Concepto</th>
+                <th>Monto Total</th>
+    """
+
+    # Agregar encabezados para cada participante
+    for participante in participantes:
+        html += f"<th>{participante}</th>"
+    html += "</tr></thead><tbody>"
+
+    # Variables para calcular totales
+    totales = {p: 0.0 for p in participantes}
+    total_general = 0.0
+
+    # Agregar filas de gastos
     for gasto in gastos:
         participantes_montos = parse_participants(
             gasto.get('participants', ''),
             gasto['amount'],
             participantes
         )
-        desglose = ", ".join([f"{p}: ${m:.2f}" for p, m in participantes_montos.items()])
-        display(f"- {gasto['name']} gastó ${gasto['amount']:,.2f} en {gasto['item']}", target="results")
-        display(f"  -- Desglose: {desglose}", target="results")
 
-    display("\nGasto total por persona (lo que debe pagar cada uno):", target="results")
-    for persona, gasto in gastos_por_persona.items():
-        display(f"- {persona}: ${gasto:,.2f}", target="results")
+        # Actualizar totales
+        total_general += gasto['amount']
+        for p, m in participantes_montos.items():
+            totales[p] += m
 
-    display("\nPagos realizados por persona:", target="results")
-    for persona, pago in pagos_realizados.items():
-        display(f"- {persona}: ${pago:,.2f}", target="results")
+        # Agregar fila de gasto
+        html += f"""
+            <tr>
+                <td>{gasto['name']}</td>
+                <td class="concept">{gasto['item']}</td>
+                <td>${gasto['amount']:,.2f}</td>
+        """
 
-    display("\nBalance final por persona:", target="results")
-    for persona, balance in balances.items():
-        display(f"- {persona}: ${balance:,.2f}", target="results")
+        # Agregar columnas de montos por participante
+        for participante in participantes:
+            monto = participantes_montos.get(participante, 0)
+            html += f"<td>${monto:.2f}</td>"
+
+        html += "</tr>"
+
+    # Agregar fila de totales
+    html += f"""
+        <tr class="total-row">
+            <td colspan="2">Total Gastado</td>
+            <td>${total_general:,.2f}</td>
+    """
+
+    for participante in participantes:
+        html += f"<td>${totales[participante]:.2f}</td>"
+
+    html += "</tr>"
+
+        # Agregar fila de pagos realizados
+    html += f"""
+        <tr class="total-row">
+            <td colspan="2">Total Pagado</td>
+            <td>${sum(pagos_realizados.values()):,.2f}</td>
+    """
+
+    for participante in participantes:
+        html += f"<td>${pagos_realizados[participante]:.2f}</td>"
+
+    html += "</tr>"
+
+    # Agregar fila de balance final
+    html += f"""
+        <tr class="total-row">
+            <td colspan="2">Balance Final</td>
+            <td>${sum(balances.values()):,.2f}</td>
+    """
+
+    for participante in participantes:
+        balance = balances[participante]
+        # Agregar color según el balance sea positivo o negativo
+        color = "#2e7d32" if balance >= 0 else "#c62828"
+        html += f'<td style="color: {color}">${balance:.2f}</td>'
+
+    html += "</tr></tbody></table>"
+
+    innerHTML += html
+
+    results_div.innerHTML = innerHTML
 
     display("\nPagos pendientes:", target="results")
     for transaccion in transacciones:
@@ -208,8 +279,9 @@ def display_summary(gastos, gastos_por_persona, pagos_realizados, balances, tran
 
 async def calculate_from_url(url):
     url = page["#sheet-url"][0].value
-    results_div = page["#results"][0]
-    results_div.innerHTML = "<h2>Resultados</h2>"
+    if not url:
+        display("Por favor, ingresa una URL válida", target="results")
+        return None
     gastos = await read_google_sheet(url)
     balance_data = balance_transactions(gastos)
     display_summary(**balance_data)
