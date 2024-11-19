@@ -32,8 +32,8 @@
 
 
     <div class="tip">
-      Si no tienes una hoja de cálculo, puedes usar este ejemplo para comenzar:
-      https://docs.google.com/spreadsheets/d/1dsHb32ksG2k_YNeneAodtBOU_xsmXlcK8ClqK9L0fRk/edit?usp=sharing
+      <p>Si no tienes una hoja de cálculo, puedes usar este ejemplo para comenzar:
+      https://docs.google.com/spreadsheets/d/1dsHb32ksG2k_YNeneAodtBOU_xsmXlcK8ClqK9L0fRk/edit?usp=sharing</p>
     </div>
 
 
@@ -78,6 +78,9 @@
         </tr>
     </table>
 
+    <p>Por ejemplo:</p>
+    <img src="/images/ejemplo_1.png" alt="Ejemplo de hoja de cálculo">
+
     <h2>Formas de Dividir los Gastos</h2>
 
     <h3>1. División Equitativa entre Todos</h3>
@@ -99,6 +102,8 @@
         </table>
     </div>
 
+    <img src="/images/ejemplo_1.png" alt="Ejemplo de hoja de cálculo">
+
     <h3>2. División Equitativa entre Algunos</h3>
     <div class="example">
         <p>Lista los nombres de los participantes separados por comas:</p>
@@ -118,6 +123,8 @@
         </table>
     </div>
 
+    <img src="/images/ejemplo_2.png" alt="Ejemplo de hoja de cálculo">
+
     <h3>3. División con Montos Específicos</h3>
     <div class="example">
         <p>Usa el símbolo = para asignar montos específicos:</p>
@@ -136,6 +143,8 @@
             </tr>
         </table>
     </div>
+
+    <img src="/images/ejemplo_3.png" alt="Ejemplo de hoja de cálculo">
 
     <h3>4. División Mixta</h3>
     <div class="example">
@@ -163,6 +172,26 @@
         Para una división equitativa entre varios participantes, simplemente lista sus nombres separados por comas sin usar el símbolo =.
     </div>
 
+    <div class="tip">
+      Si quieres incluir a alguien que no ha hecho ningún gasto, simplemente incluye su nombre en la columna 'name' con un monto de 0.
+      <p>Por ejemplo</p>
+      <table>
+          <tr>
+              <th>item</th>
+              <th>name</th>
+              <th>amount</th>
+              <th>participants</th>
+          </tr>
+          <tr>
+              <td>Ninguno</td>
+              <td>Daniel</td>
+              <td>0</td>
+              <td></td>
+          </tr>
+      </table>
+  </div>
+
+
     <div class="warning">
         La suma de los montos específicos no puede exceder el monto total del gasto.
     </div>
@@ -175,38 +204,23 @@
         Todos los nombres en la columna 'participants' deben corresponder exactamente a los nombres de los participantes del grupo.
     </div>
 
-    <h2>Ejemplos de Casos Comunes</h2>
-
-    <h3>Caso 1: Alguien paga más por una razón específica</h3>
-    <div class="example">
-        <p>Por ejemplo, si en una cena alguien pidió algo más costoso:</p>
-        <table>
-            <tr>
-                <td>Cena</td>
-                <td>Pedro</td>
-                <td>1200</td>
-                <td>Pedro=500,Ana,Luis,María</td>
-            </tr>
-        </table>
-        <p>Pedro pagará $500, y el resto ($700) se divide entre Ana, Luis y María.</p>
-    </div>
-
-    <h3>Caso 2: Gasto compartido entre parejas</h3>
-    <div class="example">
-        <p>Si el gasto se divide por parejas o grupos:</p>
-        <table>
-            <tr>
-                <td>Hospedaje</td>
-                <td>Ana</td>
-                <td>2000</td>
-                <td>Ana=1000,Luis=1000</td>
-            </tr>
-        </table>
-    </div>
-
     <div class="tip">
         Revisa siempre el resumen generado por la aplicación para verificar que los gastos se hayan dividido como esperas.
     </div>
+
+    <div class="warning">
+        La aplicación no guarda ni almacena ninguna información de las hojas de cálculo que procesa, tus datos son privados y nunca salen de tu navegador.
+    </div>
+
+    <footer>
+      <p>
+        Creado por <a href="https://twitter.com/jjsantoso" target="_blank">@jjsantoso</a>
+        - <a href="https://github.com/jjsantos01" target="_blank">GitHub</a>
+        - <a href="https://www.jjsantoso.com/" target="_blank">Web</a>
+
+      </p>
+    </footer>
+
 
 </body>
 </html>
