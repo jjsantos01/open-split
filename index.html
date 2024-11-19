@@ -20,8 +20,17 @@
 
     <p>
       Para comenzar, introduce tus gastos en una hoja de cálculo de Google y copia la URL a continuación.
-
     </p>
+
+    <div id="main-content">
+      <label for="sheet-url">URL de la Hoja de Cálculo:</label>
+      <input id="sheet-url" type="text" placeholder="https://docs.google.com/spreadsheets/d/{ID}/edit?usp=sharing"/>
+      <button id="sheet-url-btn" type="submit" py-click="calculate_from_url">
+          Calcular
+      </button>
+      <div id="results"></div>
+    </div>
+
     <div class="tip">
       Para llenar la hoja de cálculo, sigue las <a href="#instrucciones">instrucciones de más abajo</a>.
     </div>
@@ -34,16 +43,6 @@
     <div class="tip">
       <p>Si no tienes una hoja de cálculo, puedes usar este ejemplo para comenzar:
       https://docs.google.com/spreadsheets/d/1dsHb32ksG2k_YNeneAodtBOU_xsmXlcK8ClqK9L0fRk/edit?usp=sharing</p>
-    </div>
-
-
-    <div id="main-content">
-      <label for="sheet-url">URL de la Hoja de Cálculo:</label>
-      <input id="sheet-url" type="text" value="https://docs.google.com/spreadsheets/d/1dsHb32ksG2k_YNeneAodtBOU_xsmXlcK8ClqK9L0fRk/edit?usp=sharing" placeholder="https://docs.google.com/spreadsheets/d/{ID}/edit?usp=sharing"/>
-      <button id="sheet-url-btn" type="submit" py-click="calculate_from_url">
-          Calcular
-      </button>
-      <div id="results"></div>
     </div>
 
     <script type="py" src="./main.py" config="./pyscript.toml"></script>
@@ -102,6 +101,7 @@
         </table>
     </div>
 
+    <p>Por ejemplo:</p>
     <img src="/images/ejemplo_1.png" alt="Ejemplo de hoja de cálculo">
 
     <h3>2. División Equitativa entre Algunos</h3>
@@ -123,6 +123,7 @@
         </table>
     </div>
 
+    <p>Por ejemplo:</p>
     <img src="/images/ejemplo_2.png" alt="Ejemplo de hoja de cálculo">
 
     <h3>3. División con Montos Específicos</h3>
@@ -144,6 +145,7 @@
         </table>
     </div>
 
+    <p>Por ejemplo:</p>
     <img src="/images/ejemplo_3.png" alt="Ejemplo de hoja de cálculo">
 
     <h3>4. División Mixta</h3>
