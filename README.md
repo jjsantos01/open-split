@@ -2,6 +2,8 @@
 
 Esta aplicación te ayuda a dividir gastos entre un grupo de personas de manera flexible y equitativa. Puedes especificar diferentes formas de dividir cada gasto, desde división equitativa hasta montos específicos por persona.
 
+Disponible en: [https://jjsantos01.github.io//open-split/](https://jjsantos01.github.io//open-split/)
+
 ## Instrucciones
 
 1. **Preparar la Hoja de Cálculo**:
@@ -72,3 +74,6 @@ Pedro pagará $500, y el resto ($700) se divide entre Ana, Luis y María ($350 c
 | Hospedaje | Ana | 2000 | Ana=1000,Luis=1000 |
 
 Revisa siempre el resumen generado por la aplicación para verificar que los gastos se hayan dividido como esperas.
+
+## Sitio renderizado
+![Open Split](/images/Open-split.png)
