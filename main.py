@@ -113,8 +113,9 @@ def parse_participants(participants_str, total_amount, all_participants):
 
     return participant_amounts
 
-def balance_transactions(gastos, participantes, display_summary=True):
+def balance_transactions(gastos):
     # Inicializar el total de gastos por persona
+    participantes = list(set(gasto["name"] for gasto in gastos))
     gastos_por_persona = {persona: 0 for persona in participantes}
 
     # Para cada gasto, calcular cuánto debe pagar cada participante
@@ -166,40 +167,49 @@ def balance_transactions(gastos, participantes, display_summary=True):
         if acreedores[j][1] < 0.01:
             j += 1
 
-    if display_summary:
-        display("\nGastos realizados:", target="results")
-        for gasto in gastos:
-            participantes_montos = parse_participants(
-                gasto.get('participants', ''),
-                gasto['amount'],
-                participantes
-            )
-            desglose = ", ".join([f"{p}: ${m:.2f}" for p, m in participantes_montos.items()])
-            display(f"- {gasto['name']} gastó ${gasto['amount']:,.2f} en {gasto['item']}", target="results")
-            display(f"  -- Desglose: {desglose}", target="results")
+    output = {
+        "gastos": gastos,
+        "gastos_por_persona": gastos_por_persona,
+        "pagos_realizados": pagos_realizados,
+        "balances": balances,
+        "transacciones": transacciones
+        }
+    return output
 
-        display("\nGasto total por persona (lo que debe pagar cada uno):", target="results")
-        for persona, gasto in gastos_por_persona.items():
-            display(f"- {persona}: ${gasto:,.2f}", target="results")
+def display_summary(gastos, gastos_por_persona, pagos_realizados, balances, transacciones):
+    participantes = list(gastos_por_persona.keys())
+    display("\nGastos realizados:", target="results")
+    for gasto in gastos:
+        participantes_montos = parse_participants(
+            gasto.get('participants', ''),
+            gasto['amount'],
+            participantes
+        )
+        desglose = ", ".join([f"{p}: ${m:.2f}" for p, m in participantes_montos.items()])
+        display(f"- {gasto['name']} gastó ${gasto['amount']:,.2f} en {gasto['item']}", target="results")
+        display(f"  -- Desglose: {desglose}", target="results")
 
-        display("\nPagos realizados por persona:", target="results")
-        for persona, pago in pagos_realizados.items():
-            display(f"- {persona}: ${pago:,.2f}", target="results")
+    display("\nGasto total por persona (lo que debe pagar cada uno):", target="results")
+    for persona, gasto in gastos_por_persona.items():
+        display(f"- {persona}: ${gasto:,.2f}", target="results")
 
-        display("\nBalance final por persona:", target="results")
-        for persona, balance in balances.items():
-            display(f"- {persona}: ${balance:,.2f}", target="results")
+    display("\nPagos realizados por persona:", target="results")
+    for persona, pago in pagos_realizados.items():
+        display(f"- {persona}: ${pago:,.2f}", target="results")
 
-        display("\nPagos pendientes:", target="results")
-        for transaccion in transacciones:
-            display(f"- {transaccion}", target="results")
+    display("\nBalance final por persona:", target="results")
+    for persona, balance in balances.items():
+        display(f"- {persona}: ${balance:,.2f}", target="results")
 
-    return transacciones
+    display("\nPagos pendientes:", target="results")
+    for transaccion in transacciones:
+        display(f"- {transaccion}", target="results")
+
 
 async def calculate_from_url(url):
     url = page["#sheet-url"][0].value
     results_div = page["#results"][0]
     results_div.innerHTML = "<h2>Resultados</h2>"
     gastos = await read_google_sheet(url)
-    participantes = list(set(gasto["name"] for gasto in gastos))
-    balance_transactions(gastos, participantes)
+    balance_data = balance_transactions(gastos)
+    display_summary(**balance_data)
