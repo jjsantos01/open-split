@@ -109,7 +109,9 @@
 
     <p>Por ejemplo:</p>
     <img src="images/ejemplo_1.png" alt="Ejemplo de hoja de cálculo">
-
+    <p>
+      En este caso, todos los gastos se dividirán por igual entre Ana, Luis, María y Pedro.
+    </p>
     <div class="tip">
       Puedes usar el campo de "participantes adicionales" para incluir a aquellos participantes que no hicieron un gasto o cuyo nombre no aparece en la hoja de cálculo. Estos participantes solo serán considerados en todos los gastos donde participan todos. Los nombres de los participantes deben ponerse separados por comas.
     </div>
@@ -128,10 +130,12 @@
                 <td>Gasolina</td>
                 <td>Luis</td>
                 <td>720</td>
-                <td>Luis,Ana,María</td>
+                <td>Luis,Ana</td>
             </tr>
         </table>
+      <p>En este caso, el gasto se dividirá equitativamente solo entre Luis y Ana. Pedro y María no participarán en este gasto.</p>
     </div>
+
 
     <p>Por ejemplo:</p>
     <img src="images/ejemplo_2.png" alt="Ejemplo de hoja de cálculo">
@@ -150,9 +154,10 @@
                 <td>Almuerzo</td>
                 <td>Ana</td>
                 <td>1500</td>
-                <td>Ana=500,Luis=500,María=500</td>
+                <td>Ana=1000,Luis=200,María=300</td>
             </tr>
         </table>
+        <p>En este caso, Ana pagará $1000, Luis $200 y María $300.</p>
     </div>
 
     <p>Por ejemplo:</p>
@@ -172,10 +177,10 @@
                 <td>Super</td>
                 <td>Ana</td>
                 <td>950</td>
-                <td>Ana=400,Luis=400,María</td>
+                <td>Ana=250,Luis,María</td>
             </tr>
         </table>
-        <p>En este ejemplo, María pagará los $150 restantes.</p>
+        <p>En este ejemplo, Ana pagará $250 y el resto se dividirá equitativamente entre Luis y María, es decir, $350 cada uno.</p>
     </div>
 
     <h2>Consejos y Advertencias</h2>
