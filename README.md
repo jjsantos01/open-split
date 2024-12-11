@@ -9,8 +9,8 @@ Disponible en: [https://jjsantos01.github.io//open-split/](https://jjsantos01.gi
 1. **Preparar la Hoja de Cálculo**:
    - Crea una hoja de cálculo en Google Sheets con las siguientes columnas:
      - `item`: Descripción del gasto (ej: "Supermercado", "Gasolina")
-     - name: Nombre de quien realizó el pago
-     - amount: Monto total del gasto
+     - `name`: Nombre de quien realizó el pago
+     - `amount`: Monto total del gasto
      - `participants`: Quiénes participan en el gasto y cómo se divide (opcional)
 
 2. **Compartir la Hoja de Cálculo**:
@@ -19,36 +19,39 @@ Disponible en: [https://jjsantos01.github.io//open-split/](https://jjsantos01.gi
 3. **Usar la Aplicación**:
    - Introduce la URL de tu hoja de cálculo en el campo proporcionado en la aplicación.
    - Haz clic en el botón "Calcular" para procesar los datos y obtener los resultados.
+   - Puedes usar el campo de "participantes adicionales" para incluir a aquellos participantes que no hicieron un gasto o cuyo nombre no aparece en la hoja de cálculo. Estos participantes solo serán considerados en todos los gastos donde participan todos. Los nombres de los participantes deben ponerse separados por comas.
 
 ## Ejemplos de División de Gastos
 
 ### 1. División Equitativa entre Todos
-Deja la columna 'participants' vacía para dividir el gasto equitativamente entre todos los participantes.
+Si dejas la columna 'participants' vacía, el gasto se dividirá equitativamente entre todos los participantes registrados (incluyendo los participantes adicionales que hayas agregado).
 
 ### 2. División Equitativa entre Algunos
 Lista los nombres de los participantes separados por comas:
 
-| item     | name | amount | participants      |
-|----------|------|--------|-------------------|
-| Gasolina | Luis | 720    | Luis,Ana,María    |
+| item     | name | amount | participants |
+|----------|------|--------|--------------|
+| Gasolina | Luis | 720    | Luis,Ana     |
 
+En este caso, el gasto se dividirá equitativamente solo entre Luis y Ana. Los demás participantes no participarán en este gasto.
 
 ### 3. División con Montos Específicos
 Usa el símbolo `=` para asignar montos específicos:
 
-| item    | name | amount | participants           |
-|---------|------|--------|------------------------|
-| Almuerzo| Ana  | 1500   | Ana=500,Luis=500,María=500 |
+| item     | name | amount | participants              |
+|----------|------|--------|---------------------------|
+| Almuerzo | Ana  | 1500   | Ana=1000,Luis=200,María=300 |
 
+En este caso, Ana pagará $1000, Luis $200 y María $300.
 
 ### 4. División Mixta
 Combina montos específicos con división equitativa del resto:
 
-| item  | name | amount | participants           |
-|-------|------|--------|------------------------|
-| Super | Ana  | 950    | Ana=400,Luis=400,María |
+| item  | name | amount | participants      |
+|-------|------|--------|-------------------|
+| Super | Ana  | 950    | Ana=250,Luis,María |
 
-En este ejemplo, María pagará los $150 restantes.
+En este ejemplo, Ana pagará $250 y el resto ($700) se dividirá equitativamente entre Luis y María, es decir, $350 cada uno.
 
 ## Consejos y Advertencias
 
@@ -56,8 +59,7 @@ En este ejemplo, María pagará los $150 restantes.
 - La suma de los montos específicos no puede exceder el monto total del gasto.
 - Si algunos participantes tienen montos específicos y otros no, el monto restante se dividirá equitativamente entre los participantes sin monto específico.
 - Todos los nombres en la columna 'participants' deben corresponder exactamente a los nombres de los participantes del grupo.
-
-## Ejemplos de Casos Comunes
+- Los participantes adicionales que agregues solo serán considerados en los gastos donde participan todos (cuando la columna 'participants' está vacía).## Ejemplos de Casos Comunes
 
 ### Caso 1: Alguien paga más por una razón específica
 
