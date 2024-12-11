@@ -116,6 +116,13 @@ def parse_participants(participants_str, total_amount, all_participants):
 def balance_transactions(gastos):
     # Inicializar el total de gastos por persona
     participantes = list(set(gasto["name"] for gasto in gastos))
+    for gasto in gastos:
+        if 'participants' in gasto:
+            for part in gasto['participants'].split(','):
+                part = part.split('=')[0].strip()
+                if bool(part) and (part not in participantes):
+                    participantes.append(part)
+
     gastos_por_persona = {persona: 0 for persona in participantes}
 
     # Para cada gasto, calcular cuánto debe pagar cada participante
