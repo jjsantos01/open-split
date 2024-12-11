@@ -110,6 +110,10 @@
     <p>Por ejemplo:</p>
     <img src="images/ejemplo_1.png" alt="Ejemplo de hoja de cálculo">
 
+    <div class="tip">
+      Puedes usar el campo de "participantes adicionales" para incluir a aquellos participantes que no hicieron un gasto o cuyo nombre no aparece en la hoja de cálculo. Estos participantes solo serán considerados en todos los gastos donde participan todos. Los nombres de los participantes deben ponerse separados por comas.
+    </div>
+
     <h3>2. División Equitativa entre Algunos</h3>
     <div class="example">
         <p>Lista los nombres de los participantes separados por comas:</p>
@@ -181,24 +185,8 @@
     </div>
 
     <div class="tip">
-      Si quieres incluir a alguien que no ha hecho ningún gasto, simplemente incluye su nombre en la columna 'name' con un monto de 0.
-      <p>Por ejemplo</p>
-      <table>
-          <tr>
-              <th>item</th>
-              <th>name</th>
-              <th>amount</th>
-              <th>participants</th>
-          </tr>
-          <tr>
-              <td>Ninguno</td>
-              <td>Daniel</td>
-              <td>0</td>
-              <td></td>
-          </tr>
-      </table>
-  </div>
-
+      Si quieres incluir a alguien que no ha hecho ningún gasto, añádelo en el campo de "participantes adicionales" separado por comas.
+    </div>
 
     <div class="warning">
         La suma de los montos específicos no puede exceder el monto total del gasto.
@@ -206,10 +194,11 @@
 
     <div class="tip">
         Si algunos participantes tienen montos específicos y otros no, el monto restante se dividirá equitativamente entre los participantes sin monto específico.
+        Por ejemplo, si Ana=500,Luis,María, María pagará el monto restante de forma equitativa con Ana y Luis.
     </div>
 
     <div class="warning">
-        Todos los nombres en la columna 'participants' deben corresponder exactamente a los nombres de los participantes del grupo.
+        Todos los nombres en la columna 'participants' deben corresponder exactamente a los nombres de los participantes del grupo. Si hay un error de ortografía, como "Ana" en lugar de "ana", la aplicación no podrá dividir el gasto correctamente.
     </div>
 
     <div class="tip">
