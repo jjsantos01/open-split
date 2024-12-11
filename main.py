@@ -123,6 +123,13 @@ def balance_transactions(gastos):
                 if bool(part) and (part not in participantes):
                     participantes.append(part)
 
+    extra_participants = page["#extra-participants"][0].value
+
+    if extra_participants:
+        for extra in extra_participants.split(','):
+            if extra not in participantes:
+                participantes.append(extra.strip())
+
     gastos_por_persona = {persona: 0 for persona in participantes}
 
     # Para cada gasto, calcular cuánto debe pagar cada participante

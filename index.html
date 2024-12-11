@@ -23,8 +23,14 @@
     </p>
 
     <div id="main-content">
-      <label for="sheet-url">URL de la Hoja de Cálculo:</label>
-      <input id="sheet-url" type="text" placeholder="https://docs.google.com/spreadsheets/d/{ID}/edit?usp=sharing"/>
+      <div>
+        <label for="sheet-url">URL de la Hoja de Cálculo:</label>
+        <input id="sheet-url" type="text" placeholder="https://docs.google.com/spreadsheets/d/{ID}/edit?usp=sharing"/>
+      </div>
+      <div>
+        <label for="extra-participants">Participantes adicionales (no vienen en la hoja de cálculo):</label>
+        <input id="extra-participants" type="text" placeholder="participante1,participante2"/>
+      </div>
       <button id="sheet-url-btn" type="submit" py-click="calculate_from_url">
           Calcular
       </button>
